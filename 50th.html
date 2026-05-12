@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>50 Lessons - Clasa 6B</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --accent: #00d2ff;
+            --main-white: #ffffff;
+            --bg-dark: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--main-white);
+            font-family: 'Lexend Deca', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevents scrollbars on Smart Boards */
+            position: fixed; /* Fixes mobile rubber-banding */
+        }
+
+        .main-display {
+            text-align: center;
+            width: 90%;
+            max-width: 1200px;
+            z-index: 10;
+        }
+
+        .class-tag {
+            font-size: clamp(1rem, 4vw, 2rem);
+            letter-spacing: 0.5rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin: 0;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .number-title {
+            /* Responsive font size: grows with screen size */
+            font-size: clamp(8rem, 25vw, 18rem);
+            font-weight: 900;
+            margin: -2vh 0;
+            background: linear-gradient(to bottom, #fff, #64748b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.15));
+            line-height: 1;
+        }
+
+        .lesson-text {
+            font-size: clamp(1.5rem, 6vw, 4rem);
+            text-transform: uppercase;
+            font-weight: 400;
+            margin-bottom: 2vh;
+        }
+
+        .teacher-btn {
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 1.5vh 4vw;
+            font-size: clamp(0.9rem, 3vw, 1.3rem);
+            font-family: 'Lexend Deca', sans-serif;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .teacher-btn:active {
+            transform: scale(0.95);
+        }
+
+        @media (hover: hover) {
+            .teacher-btn:hover {
+                background: var(--accent);
+                color: var(--bg-dark);
+                box-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
+            }
+        }
+
+        /* Balloon Styling */
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            z-index: 5;
+            pointer-events: none;
+            animation: flyUp 5s linear forwards;
+        }
+
+        @keyframes flyUp {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+            25% { transform: translateY(-30vh) translateX(20px) rotate(10deg); }
+            50% { transform: translateY(-60vh) translateX(-20px) rotate(-10deg); }
+            100% { transform: translateY(-130vh) translateX(0) rotate(0deg); opacity: 0; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Credits */
+        .footer-credit {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.2);
+        }
+
+        /* Toast Message for Smart Boards */
+        #toast {
+            position: fixed;
+            top: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            color: black;
+            padding: 2vh 4vw;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: clamp(1rem, 4vw, 1.8rem);
+            display: none;
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body onclick="enableFullScreen()">
+
+    <div id="toast">Thank you for being the best English teacher!</div>
+
+    <div class="main-display">
+        <p class="class-tag">Clasa 6B</p>
+        <h1 class="number-title">50th</h1>
+        <div class="lesson-text">English Lesson</div>
+        
+        <button class="teacher-btn" id="surpriseBtn" onclick="triggerSurprise(event)">Click for surprise 😉</button>
+    </div>
+
+    <div class="footer-credit">made by Petrișor :)</div>
+
+    <script>
+        let canClick = true;
+
+        // Makes the site go full screen when you first touch/click it (Good for Smart Boards)
+        function enableFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(e => {});
+            }
+        }
+
+        function triggerSurprise(e) {
+            e.stopPropagation(); // Prevents double firing with the body click
+            if (!canClick) return;
+            canClick = false;
+
+            const toast = document.getElementById('toast');
+            
+            // Show message
+            toast.style.display = 'block';
+            
+            // Confetti burst - customized for big screens
+            const end = Date.now() + 2000;
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#00d2ff', '#ffffff']
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#00d2ff', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Create 20 Balloons
+            for(let i=0; i<20; i++) {
+                setTimeout(createBalloon, i * 150);
+            }
+
+            // 3s Cooldown
+            setTimeout(() => {
+                canClick = true;
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            balloon.innerHTML = "🎈";
+            balloon.style.left = Math.random() * 90 + 5 + 'vw';
+            balloon.style.fontSize = (Math.random() * 2 + 2) + 'rem';
+            document.body.appendChild(balloon);
+
+            setTimeout(() => balloon.remove(), 5000);
+        }
+
+        window.onload = () => {
+            setTimeout(() => {
+                confetti({
+                    particleCount: 60,
+                    spread: 100,
+                    origin: { y: 0.6 }
+                });
+            }, 500);
+        };
+    </script>
+</body>
+</html>
+
